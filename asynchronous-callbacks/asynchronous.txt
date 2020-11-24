@@ -1,0 +1,104 @@
+We have a workaround the problem shown below
+
+
+const newTodo = input.value; //get user input
+saveToDatabase(newTodo); //this could take a while. Should the user have to wait or our app grind to a halt because of this?
+input.value = ''; // reset form
+
+The workaround we are fortunate to have:
+
+Use callbacks with setTimeout
+
+
+PROMISES:
+
+A promise is just an object representing the eventual completion or failure of an asynchronous operation. 
+
+
+A promise is a returned object to which you attach callbacks, instead of passing callbacks into a function. 
+
+The pending state of a promise is what you initially get. We don't know if it's a failure or a success. 
+
+If we first reject a promise by invoking the reject callback, the promise status is set to resolve. If you reject it, the promise status is set to rejected and the console throws an error. 
+
+Every promise has a .then() method which will run if resolved. If we get rejected, we have a .catch() method. 
+
+
+
+RETURNING PROMISES FROM FUNCTIONS
+
+const makeDogPromise = () => {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			const rand = Math.random();
+			if (rand < 0.5) {
+				resolve();
+			} else {
+				reject();
+			}
+		}, 5000);
+	});
+};
+
+makeDogPromise()
+	.then(() => {
+		console.log('We got a Dog :)');
+	})
+	.catch(() => {
+		console.log(':( No Dog');
+	});
+
+
+
+
+
+RESOLVING/REJECTING WITH VALUES
+
+const fakeRequest = (url) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			const pages = {
+				'/users': [ { id: 1, username: 'Bilbo' }, { id: 2, username: 'Tilda' } ],
+				'/about': 'This is the about page'
+			};
+			const data = pages[url];
+			if (data) {
+				resolve({ status: 200, data });
+			} else {
+				reject({ status: 404 });
+			}
+		}, 5000);
+	});
+};
+
+fakeRequest('/users')
+	.then((res) => {
+		console.log('Status Code', res.status);
+		console.log('Data HERE', res.data);
+		console.log('REQUEST WORKED!');
+	})
+	.catch((res) => {
+		console.log(res.status);
+		console.log('Request failed');
+	});
+
+fakeRequest('/about')
+	.then((res) => {
+		console.log('Status Code', res.status);
+		console.log('Data HERE', res.data);
+		console.log('REQUEST WORKED!');
+	})
+	.catch((res) => {
+		console.log(res.status);
+		console.log('Request failed');
+	});
+
+
+
+
+
+
+CHAINING PROMISES
+
+
+
